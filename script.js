@@ -37,12 +37,19 @@ const p1 = managePlayer('Shark', 'x');
 const p2 = managePlayer('Tiger', 'o');
 
 function gameLogic() {
-    if (gameBoard.getTurn() % 2 != 0) {
-        let p1ScoreArray = p1.checkBoard();
-        console.log(p1ScoreArray);
+    let p1ScoreArray = [];
+    let p2ScoreArray = [];
+    function updateScoreArray() {
+        if (gameBoard.getTurn() % 2 != 0) {
+            p1ScoreArray = p1.checkBoard();
+            return p1ScoreArray;
+        }
+        else {
+            p2ScoreArray = p2.checkBoard()
+            return p2ScoreArray;
+        }
     }
-    else {
-        let p2ScoreArray = p2.checkBoard()
-        console.log(p2ScoreArray);
-    }
+    return {updateScoreArray}
 }
+
+const oper8r = gameLogic();
