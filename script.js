@@ -1,5 +1,6 @@
 function setBoard() {
     let board = new Array(9).fill('');
+    let playerScoreArray = [];
     let turn = 0;
     function markBoard(xo, gridNum) {
         if (!board[gridNum]){
@@ -19,8 +20,9 @@ function setBoard() {
     function getTurn() {
         return turn;
     }
-    return {board, markBoard, checkBoard, getTurn};
+    return {board, playerScoreArray, markBoard, checkBoard, getTurn};
 }
+
 const gameBoard = setBoard();
 
 function managePlayer(player, xo) {
@@ -37,19 +39,40 @@ const p1 = managePlayer('Shark', 'x');
 const p2 = managePlayer('Tiger', 'o');
 
 function gameLogic() {
-    let p1ScoreArray = [];
-    let p2ScoreArray = [];
     function updateScoreArray() {
         if (gameBoard.getTurn() % 2 != 0) {
-            p1ScoreArray = p1.checkBoard();
-            return p1ScoreArray;
+            gameBoard.playerScoreArray = p1.checkBoard();
+            // return gameBoard.playerScoreArray;
         }
         else {
-            p2ScoreArray = p2.checkBoard()
-            return p2ScoreArray;
+            gameBoard.playerScoreArray = p2.checkBoard()
+            // return gameBoard.playerScoreArray;
         }
     }
-    return {updateScoreArray}
+    function checkArray(playerScoreArray, combinationArray) {
+        return combinationArray.every(value => playerScoreArray.includes(value))
+    }
+    //this function returns true if all values in combinationArray are within playerArray
+    function isWinner(playerScoreArray) {
+        if ((gameBoard.getTurn() >= 9) && !(winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray))))
+        return 'Tie!'; //checks for max turns and if no winning combo is detected
+        else {
+            return winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray));
+        }
+    }
+    return {updateScoreArray, isWinner}
 }
 
 const oper8r = gameLogic();
+
+const winningCombinations = [
+    [0, 1, 2],  // Top Row
+    [3, 4, 5],  // Middle Row
+    [6, 7, 8],  // Bottom Row
+    [0, 3, 6],  // Left Column
+    [1, 4, 7],  // Middle Column
+    [2, 5, 8],  // Right Column
+    [0, 4, 8],  // Diagonal Top-Left to Bottom-Right
+    [2, 4, 6]   // Diagonal Top-Right to Bottom-Left
+];
+
