@@ -1,6 +1,5 @@
 function setBoard() {
     let board = new Array(9).fill('');
-    let playerScoreArray = [];
     let turn = 0;
     function markBoard(xo, gridNum) {
         if (!board[gridNum]){
@@ -20,19 +19,20 @@ function setBoard() {
     function getTurn() {
         return turn;
     }
-    return {board, playerScoreArray, markBoard, checkBoard, getTurn};
+    return {board, markBoard, checkBoard, getTurn};
 }
 
 const gameBoard = setBoard();
 
 function managePlayer(player, xo) {
     const name = player;
+    let playerScoreArray = [];
     let score = 0;
     const getScore = () => score;
     const addScore = () => score++;
     const markBoard = (gridNum) => gameBoard.markBoard(xo, gridNum);
     const checkBoard = () => gameBoard.checkBoard(xo);
-    return {name, getScore, addScore, markBoard, checkBoard};
+    return {name, playerScoreArray, getScore, addScore, markBoard, checkBoard};
 }
 
 const p1 = managePlayer('Shark', 'x');
@@ -41,12 +41,12 @@ const p2 = managePlayer('Tiger', 'o');
 function gameLogic() {
     function updateScoreArray() {
         if (gameBoard.getTurn() % 2 != 0) {
-            gameBoard.playerScoreArray = p1.checkBoard();
-            // return gameBoard.playerScoreArray;
+            p1.playerScoreArray = p1.checkBoard();
+            return p1.playerScoreArray;
         }
         else {
-            gameBoard.playerScoreArray = p2.checkBoard()
-            // return gameBoard.playerScoreArray;
+            p2.playerScoreArray = p2.checkBoard()
+            return p2.playerScoreArray;
         }
     }
     function checkArray(playerScoreArray, combinationArray) {
