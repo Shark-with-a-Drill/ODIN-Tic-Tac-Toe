@@ -26,29 +26,19 @@ const gameBoard = setBoard();
 
 function managePlayer(player, xo) {
     const name = player;
-    let playerScoreArray = [];
     let score = 0;
     const getScore = () => score;
     const addScore = () => score++;
     const markBoard = (gridNum) => gameBoard.markBoard(xo, gridNum);
-    const checkBoard = () => gameBoard.checkBoard(xo);
-    return {name, playerScoreArray, getScore, addScore, markBoard, checkBoard};
+    // const checkBoard = () => gameBoard.checkBoard(xo);
+    const winCheck = () => oper8r.isWinner(gameBoard.checkBoard(xo));
+    return {name, getScore, addScore, markBoard, winCheck};
 }
 
 const p1 = managePlayer('Shark', 'x');
 const p2 = managePlayer('Tiger', 'o');
 
 function gameLogic() {
-    function updateScoreArray() {
-        if (gameBoard.getTurn() % 2 != 0) {
-            p1.playerScoreArray = p1.checkBoard();
-            return p1.playerScoreArray;
-        }
-        else {
-            p2.playerScoreArray = p2.checkBoard()
-            return p2.playerScoreArray;
-        }
-    }
     function checkArray(playerScoreArray, combinationArray) {
         return combinationArray.every(value => playerScoreArray.includes(value))
     }
@@ -60,7 +50,7 @@ function gameLogic() {
             return winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray));
         }
     }
-    return {updateScoreArray, isWinner}
+    return {isWinner}
 }
 
 const oper8r = gameLogic();
@@ -75,4 +65,3 @@ const winningCombinations = [
     [0, 4, 8],  // Diagonal Top-Left to Bottom-Right
     [2, 4, 6]   // Diagonal Top-Right to Bottom-Left
 ];
-
