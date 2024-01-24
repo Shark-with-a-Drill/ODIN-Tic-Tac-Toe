@@ -2,7 +2,7 @@ function setBoard() {
     let board = new Array(9).fill('');
     let turn = 0;
     function markBoard(xo, gridNum) {
-        if (!board[gridNum]){
+        if ((!board[gridNum]) && (p1.winCheck() != 'Win!') && (p2.winCheck() != 'Win!') ){
             board[gridNum] = xo;
             turn++;
         }
@@ -30,7 +30,6 @@ function managePlayer(player, xo) {
     const getScore = () => score;
     const addScore = () => score++;
     const markBoard = (gridNum) => gameBoard.markBoard(xo, gridNum);
-    // const checkBoard = () => gameBoard.checkBoard(xo);
     const winCheck = () => oper8r.isWinner(gameBoard.checkBoard(xo));
     return {name, getScore, addScore, markBoard, winCheck};
 }
@@ -46,8 +45,8 @@ function gameLogic() {
     function isWinner(playerScoreArray) {
         if ((gameBoard.getTurn() >= 9) && !(winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray))))
         return 'Tie!'; //checks for max turns and if no winning combo is detected
-        else {
-            return winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray));
+        else if (winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray))) {
+            return 'Win!';
         }
     }
     return {isWinner}
@@ -68,14 +67,29 @@ const winningCombinations = [
 
 function domLogic() {
     function markSymbol(gridNum) {
+        if (((p1.winCheck() == 'Tie!') || (p2.winCheck() == 'Tie!'))) {
+            console.log(p1.winCheck());
+        }
         if (gameBoard.getTurn() % 2 == 0) {
             p1.markBoard(gridNum);
+            if ((gameBoard.getTurn() >= 5) && (p1.winCheck() == 'Win!'))  {
+                console.log('Player 1 Wins!');
+                return;
+            }
         }
         else if (gameBoard.getTurn() % 2 != 0) {
             p2.markBoard(gridNum);
+            if ((gameBoard.getTurn() >= 5) && (p2.winCheck() == 'Win!'))  {
+                console.log('Player 2 Wins!');
+                return;
+            }
         }
     }
-    return {markSymbol}
+    function populateArray() {
+        boxArray.forEach((box, index) => 
+        box.innerText = gameBoard.board[index]);
+    }
+    return {markSymbol, populateArray}
 }
 
 const manipul8r = domLogic();
@@ -84,17 +98,8 @@ const holderArray = [...document.querySelectorAll('.holder')];
 const boxArray = [...document.querySelectorAll('.tholder')];
 const updateButton = document.getElementById('update');
 
-function populateArray() {
-    for (i = 0; i < gameBoard.board.length; i++) {
-        boxArray[i].innerText = gameBoard.board[i]
-    }
-}
-
-updateButton.addEventListener('click', populateArray);
-
 holderArray.forEach((box, index) => {
     box.addEventListener('click', () => {
-        manipul8r.markSymbol(index), populateArray();
+        manipul8r.markSymbol(index), manipul8r.populateArray();
     });
 });
-test
