@@ -97,3 +97,4 @@ holderArray.forEach((box, index) => {
         manipul8r.markSymbol(index), populateArray();
     });
 });
+test
