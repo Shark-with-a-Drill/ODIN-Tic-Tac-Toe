@@ -65,3 +65,15 @@ const winningCombinations = [
     [0, 4, 8],  // Diagonal Top-Left to Bottom-Right
     [2, 4, 6]   // Diagonal Top-Right to Bottom-Left
 ];
+
+
+const boxArray = [...document.querySelectorAll('.tholder')];
+const updateButton = document.getElementById('update');
+
+function populateArray() {
+    for (i = 0; i < gameBoard.board.length; i++) {
+        boxArray[i].innerText = gameBoard.board[i]
+    }
+}
+
+updateButton.addEventListener('click', populateArray);
