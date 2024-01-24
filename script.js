@@ -66,7 +66,21 @@ const winningCombinations = [
     [2, 4, 6]   // Diagonal Top-Right to Bottom-Left
 ];
 
+function domLogic() {
+    function markSymbol(gridNum) {
+        if (gameBoard.getTurn() % 2 == 0) {
+            p1.markBoard(gridNum);
+        }
+        else if (gameBoard.getTurn() % 2 != 0) {
+            p2.markBoard(gridNum);
+        }
+    }
+    return {markSymbol}
+}
 
+const manipul8r = domLogic();
+
+const holderArray = [...document.querySelectorAll('.holder')];
 const boxArray = [...document.querySelectorAll('.tholder')];
 const updateButton = document.getElementById('update');
 
@@ -77,3 +91,9 @@ function populateArray() {
 }
 
 updateButton.addEventListener('click', populateArray);
+
+holderArray.forEach((box, index) => {
+    box.addEventListener('click', () => {
+        manipul8r.markSymbol(index), populateArray();
+    });
+});
