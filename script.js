@@ -44,7 +44,7 @@ function gameLogic() {
     //this function returns true if all values in combinationArray are within playerArray
     function isWinner(playerScoreArray) {
         if ((gameBoard.getTurn() >= 9) && !(winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray))))
-        return 'Tie!'; //checks for max turns and if no winning combo is detected
+            return 'Tie!'; //checks for max turns and if no winning combo is detected
         else if (winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray))) {
             return 'Win!';
         }
@@ -68,19 +68,19 @@ const winningCombinations = [
 function domLogic() {
     function markSymbol(gridNum) {
         if (((p1.winCheck() == 'Tie!') || (p2.winCheck() == 'Tie!'))) {
-            console.log(p1.winCheck());
+            winInfoBox.innerText = (p1.winCheck());
         }
         if (gameBoard.getTurn() % 2 == 0) {
             p1.markBoard(gridNum);
             if ((gameBoard.getTurn() >= 5) && (p1.winCheck() == 'Win!'))  {
-                console.log('Player 1 Wins!');
+                winInfoBox.innerText = 'Shark wins!';
                 return;
             }
         }
         else if (gameBoard.getTurn() % 2 != 0) {
             p2.markBoard(gridNum);
             if ((gameBoard.getTurn() >= 5) && (p2.winCheck() == 'Win!'))  {
-                console.log('Player 2 Wins!');
+                winInfoBox.innerText = 'Tiger wins!';
                 return;
             }
         }
@@ -94,6 +94,7 @@ function domLogic() {
 
 const manipul8r = domLogic();
 
+const winInfoBox = document.querySelector('.winner-name')
 const holderArray = [...document.querySelectorAll('.holder')];
 const boxArray = [...document.querySelectorAll('.tholder')];
 const updateButton = document.getElementById('update');
