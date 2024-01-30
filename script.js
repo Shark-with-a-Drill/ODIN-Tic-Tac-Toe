@@ -35,18 +35,19 @@ function setBoard() {
 
 const gameBoard = setBoard();
 
-function managePlayer(player, xo) {
+function managePlayer(player, xo, pid) {
     const name = player;
+    const id = pid;
     let score = 0;
     const getScore = () => score;
     const addScore = () => score++;
     const markBoard = (gridNum) => gameBoard.markBoard(xo, gridNum);
     const winCheck = () => oper8r.isWinner(gameBoard.checkBoard(xo));
-    return {name, getScore, addScore, markBoard, winCheck};
+    return {name, id, getScore, addScore, markBoard, winCheck};
 }
 
-const p1 = managePlayer('Shark', 'x');
-const p2 = managePlayer('Tiger', 'o');
+const p1 = managePlayer('Shark', 'x', 'p1');
+const p2 = managePlayer('Tiger', 'o', 'p2');
 
 function gameLogic() {
     function checkArray(playerScoreArray, combinationArray) {
@@ -88,7 +89,7 @@ function domLogic() {
     function createWinMessage(player) {
         if (player.winCheck() == 'Win!') {
             const winMessage = `${player.name} wins!`;
-            const playerKey = player.name === 'Shark' ? 'p1' : 'p2';
+            const playerKey = player.id;
             if (gameBoard.getScoreUpdated() == 0) {
                 player.addScore();
                 gameBoard.scoreArray[playerKey] = player.getScore();
