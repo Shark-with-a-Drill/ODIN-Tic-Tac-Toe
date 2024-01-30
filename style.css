@@ -136,3 +136,13 @@
   align-items: center;
   gap: 10px;
 }
+
+#win-btn {
+  height: 50px;
+  width: 100px;
+  border-radius: 25px;
+}
+
+#win-btn > p {
+  color: black;
+}

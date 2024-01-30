@@ -1,8 +1,16 @@
 function setBoard() {
     let board = new Array(9).fill('');
     let turn = 0;
+    let scoreUpdated = 0;
+    let scoreArray = {p1: 0, p2: 0};
+    function resetBoard() {
+        board.fill('');
+        turn = 0;
+        scoreUpdated = 0;
+    }
     function markBoard(xo, gridNum) {
-        if ((!board[gridNum]) && (p1.winCheck() != 'Win!') && (p2.winCheck() != 'Win!') ){
+        if ((board[gridNum] === '') && (p1.winCheck() != 'Win!') 
+        && (p2.winCheck() != 'Win!')){
             board[gridNum] = xo;
             turn++;
         }
@@ -16,10 +24,13 @@ function setBoard() {
         }
         return wIndexes;
     }
-    function getTurn() {
-        return turn;
+    const getTurn = () => turn;
+    const getScoreUpdated = () => scoreUpdated;
+    function updateScoreUpdated(value) {
+        scoreUpdated = value;
     }
-    return {board, markBoard, checkBoard, getTurn};
+
+    return {board, scoreUpdated, scoreArray, markBoard, checkBoard, getTurn, resetBoard, getScoreUpdated, updateScoreUpdated};
 }
 
 const gameBoard = setBoard();
@@ -67,29 +78,52 @@ const winningCombinations = [
 
 function domLogic() {
     function markSymbol(gridNum) {
-        if (((p1.winCheck() == 'Tie!') || (p2.winCheck() == 'Tie!'))) {
-            winInfoBox.innerText = (p1.winCheck());
-        }
-        if (gameBoard.getTurn() % 2 == 0) {
+        if ((gameBoard.getTurn() % 2 == 0)) {
             p1.markBoard(gridNum);
-            if ((gameBoard.getTurn() >= 5) && (p1.winCheck() == 'Win!'))  {
-                winInfoBox.innerText = 'Shark wins!';
-                return;
-            }
         }
-        else if (gameBoard.getTurn() % 2 != 0) {
+        else if ((gameBoard.getTurn() % 2 != 0)) {
             p2.markBoard(gridNum);
-            if ((gameBoard.getTurn() >= 5) && (p2.winCheck() == 'Win!'))  {
-                winInfoBox.innerText = 'Tiger wins!';
-                return;
-            }
         }
+    }
+    function createWinMessage(player) {
+        if (player.winCheck() == 'Win!') {
+            const winMessage = `${player.name} wins!`;
+            const playerKey = player.name === 'Shark' ? 'p1' : 'p2';
+            if (gameBoard.getScoreUpdated() == 0) {
+                player.addScore();
+                gameBoard.scoreArray[playerKey] = player.getScore();
+                gameBoard.updateScoreUpdated(1);
+            }
+            const playerScore = gameBoard.scoreArray;
+            return [winMessage, playerScore];
+        }
+        return null;
+    }
+    function updateWinner() {
+        let winnerMessage = createWinMessage(p1);
+        if (!winnerMessage) {
+            winnerMessage = createWinMessage(p2);
+        }
+        if (winnerMessage) {
+            winInfoBox.innerText = winnerMessage[0];
+            const scores = winnerMessage[1];
+            const scoreHolder = [scores.p1, scores.p2]
+            playerScoreDisplayArray.forEach((element, index) => element.innerText = scoreHolder[index]);
+            return; //exits early if wins, if win on 9, shows win but if tie on 9, doesn't exit and tie overwrites the box
+            }
+            if (gameBoard.getTurn() > 8) {
+                winInfoBox.innerText = 'Tie!';
+            }
     }
     function populateArray() {
         boxArray.forEach((box, index) => 
         box.innerText = gameBoard.board[index]);
     }
-    return {markSymbol, populateArray}
+    function resetGame() {
+        gameBoard.resetBoard();
+        winInfoBox.innerText = '';
+    }
+    return {markSymbol, populateArray, updateWinner, resetGame}
 }
 
 const manipul8r = domLogic();
@@ -99,8 +133,16 @@ const holderArray = [...document.querySelectorAll('.holder')];
 const boxArray = [...document.querySelectorAll('.tholder')];
 const updateButton = document.getElementById('update');
 
+const playerScoreDisplayArray = [...document.querySelectorAll('.player-score')];
+
+const nextGameButton = document.querySelector('#win-btn');
+
 holderArray.forEach((box, index) => {
     box.addEventListener('click', () => {
-        manipul8r.markSymbol(index), manipul8r.populateArray();
+        manipul8r.markSymbol(index), manipul8r.populateArray(), manipul8r.updateWinner();
     });
 });
+
+nextGameButton.addEventListener('click', () => {
+    manipul8r.resetGame(), manipul8r.populateArray();
+})
