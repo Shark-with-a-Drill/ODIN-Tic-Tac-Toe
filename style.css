@@ -16,6 +16,8 @@
     --logocolor: #e8e6e3;
   }
   body {
+    display: flex;
+    flex-direction: column;
     line-height: 1.5;
     min-height: 100vh;
     text-rendering: optimizeSpeed;
@@ -47,10 +49,10 @@
     scroll-behavior: smooth;
   }
 
-  main {
-    display: grid;
-    grid-template: 1fr .85fr 1.75fr .75fr / 1fr;
-  }
+.main {
+  display: grid;
+  grid-template: 1fr .85fr 1.75fr .75fr / 1fr;
+}
 
 .title {
   display: flex;
@@ -145,4 +147,14 @@
 
 #win-btn > p {
   color: black;
+}
+
+footer {
+  margin-top: auto;
+}
+.footer-content {
+  padding: 15px 0 15px 0;
+  margin: 0 auto 0 auto;
+  display: flex;
+  justify-content: center;
 }
