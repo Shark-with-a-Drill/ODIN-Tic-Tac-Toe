@@ -126,6 +126,17 @@
   height: 100%;
 }
 
+.holder:nth-child(5) {
+  border: 2px solid rgb(98, 98, 98);
+}
+.holder:nth-child(2), .holder:nth-child(8) {
+  border-left: 2px solid rgb(98, 98, 98);
+  border-right: 2px solid rgb(98, 98, 98);
+}
+.holder:nth-child(4), .holder:nth-child(6) {
+  border-top: 2px solid rgb(98, 98, 98);
+  border-bottom: 2px solid rgb(98, 98, 98);
+}
 .nextgame {
   display: flex;
   justify-content: center;
