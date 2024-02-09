@@ -63,11 +63,27 @@
   font-size: 4em;
   margin: 10px;
 }
-
+.form-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+.form-inputs{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 5vw;
+}
 .player-holder {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+}
+.p-holder {
+  display: flex;
+  flex-direction: column;
 }
 .player-info {
   display: flex;
@@ -103,16 +119,6 @@
 
 .tholder {
   font-size: 50px;
-}
-
-
-
-.title, .ttt-holder {
-  /* background-color: aquamarine; */
-}
-
-.nextgame, .player-holder {
-  /* background-color: purple; */
 }
 
 .title, .nextgame {
@@ -169,4 +175,17 @@ footer {
   margin: 0 auto 0 auto;
   display: flex;
   justify-content: center;
+}
+
+.form-hide {
+  display: none;
+}
+.form-show {
+
+}
+.game-hide {
+  display: none;
+}
+.game-display {
+
 }

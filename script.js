@@ -1,16 +1,19 @@
+let playerArray = [];
+
 function setBoard() {
-    let board = new Array(9).fill('');
+    const boardSize = 9;
+    let board = new Array(boardSize).fill('');
     let turn = 0;
     let scoreUpdated = 0;
-    let scoreArray = {p1: 0, p2: 0};
+    let scoreArray = {p0: 0, p1: 0};
     function resetBoard() {
         board.fill('');
         turn = 0;
         scoreUpdated = 0;
     }
     function markBoard(xo, gridNum) {
-        if ((board[gridNum] === '') && (p1.winCheck() != 'Win!') 
-        && (p2.winCheck() != 'Win!')){
+        if ((board[gridNum] === '') && (playerArray[0].winCheck() != 'Win!') 
+        && (playerArray[1].winCheck() != 'Win!')){
             board[gridNum] = xo;
             turn++;
         }
@@ -35,9 +38,9 @@ function setBoard() {
 
 const gameBoard = setBoard();
 
-function managePlayer(player, xo, pid) {
+function managePlayer(player, xo) {
     const name = player;
-    const id = pid;
+    const id = 'p' + playerArray.length;
     let score = 0;
     const getScore = () => score;
     const addScore = () => score++;
@@ -45,9 +48,6 @@ function managePlayer(player, xo, pid) {
     const winCheck = () => oper8r.isWinner(gameBoard.checkBoard(xo));
     return {name, id, getScore, addScore, markBoard, winCheck};
 }
-
-const p1 = managePlayer('Shark', 'x', 'p1');
-const p2 = managePlayer('Tiger', 'o', 'p2');
 
 function gameLogic() {
     function checkArray(playerScoreArray, combinationArray) {
@@ -80,10 +80,10 @@ const winningCombinations = [
 function domLogic() {
     function markSymbol(gridNum) {
         if ((gameBoard.getTurn() % 2 == 0)) {
-            p1.markBoard(gridNum);
+            playerArray[0].markBoard(gridNum);
         }
         else if ((gameBoard.getTurn() % 2 != 0)) {
-            p2.markBoard(gridNum);
+            playerArray[1].markBoard(gridNum);
         }
     }
     function createWinMessage(player) {
@@ -101,14 +101,14 @@ function domLogic() {
         return null;
     }
     function updateWinner() {
-        let winnerMessage = createWinMessage(p1);
+        let winnerMessage = createWinMessage(playerArray[0]);
         if (!winnerMessage) {
-            winnerMessage = createWinMessage(p2);
+            winnerMessage = createWinMessage(playerArray[1]);
         }
         if (winnerMessage) {
             winInfoBox.innerText = winnerMessage[0];
             const scores = winnerMessage[1];
-            const scoreHolder = [scores.p1, scores.p2]
+            const scoreHolder = [scores.p0, scores.p1]
             playerScoreDisplayArray.forEach((element, index) => element.innerText = scoreHolder[index]);
             return; //exits early if wins, if win on 9, shows win but if tie on 9, doesn't exit and tie overwrites the box
             }
@@ -124,10 +124,46 @@ function domLogic() {
         gameBoard.resetBoard();
         winInfoBox.innerText = '';
     }
-    return {markSymbol, populateArray, updateWinner, resetGame}
+    function createPlayer() {
+        const p1Info = document.querySelector('#p1-name').value;
+        const p2Info = document.querySelector('#p2-name').value;
+        const playerDetails = [
+            {name: p1Info, symbol: 'X'},
+            {name: p2Info, symbol: 'O'}
+        ]
+        //? playerDetails.forEach(player => playerArray.push(managePlayer(player.name, player.symbol))); 
+        //? multi line version of above code:
+        playerDetails.forEach((gamer) => {
+            const player = managePlayer(gamer.name, gamer.symbol);
+            playerArray.push(player);
+        })
+        
+    }
+    // ! array.entries()
+    //? this lets you do a for ... of on objects (entries) in an (iterable) array, instead of 
+    //?the object itself which isn't iterable
+    //* works like python enumerate, but only for arrays
+    function updatePlayerName() {
+        for (const [index, player] of playerArray.entries()) {
+            playerNameArray[index].innerText = player.name
+        }
+    }
+    function showGameArea() {
+        formElement.classList.add('form-hide');
+        formElement.classList.remove('form-display');
+        gameElements.forEach(element => {
+            element.classList.remove('game-hide');
+            element.classList.add('game-display');
+        })
+    }
+    return {markSymbol, populateArray, updateWinner, resetGame, createPlayer, updatePlayerName, showGameArea}
 }
-
 const manipul8r = domLogic();
+
+
+const playerNameArray = [...document.querySelectorAll('.player-name')];
+const gameElements = [...document.querySelectorAll('.game-main')];
+const formElement = document.querySelector('#form');
 
 const winInfoBox = document.querySelector('.winner-name')
 const holderArray = [...document.querySelectorAll('.holder')];
@@ -137,13 +173,27 @@ const updateButton = document.getElementById('update');
 const playerScoreDisplayArray = [...document.querySelectorAll('.player-score')];
 
 const nextGameButton = document.querySelector('#win-btn');
+const startGameButton = document.querySelector('#p-btn');
 
+
+//?change commas to semicolons in future possibly
 holderArray.forEach((box, index) => {
     box.addEventListener('click', () => {
-        manipul8r.markSymbol(index), manipul8r.populateArray(), manipul8r.updateWinner();
+        manipul8r.markSymbol(index);
+        manipul8r.populateArray();
+        manipul8r.updateWinner();
     });
 });
 
-nextGameButton.addEventListener('click', () => {
-    manipul8r.resetGame(), manipul8r.populateArray();
+nextGameButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    manipul8r.resetGame();
+    manipul8r.populateArray();
+})
+
+startGameButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    manipul8r.createPlayer();
+    manipul8r.updatePlayerName();
+    manipul8r.showGameArea();
 })

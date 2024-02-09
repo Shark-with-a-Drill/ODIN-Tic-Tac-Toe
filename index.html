@@ -13,21 +13,42 @@
         <div class="title">
             <h1 class="title-name">Tic Tac Toe</h1>
         </div>
-        <div class="player-holder">
+
+        <form action="" class="form-display" id="form">
+                <div class="form-inputs">
+                    <div class="p-holder">
+                        <label for="p1-name"></label>
+                        <input type="text" id="p1-name" required>
+                        <span>
+                            Player 1
+                        </span>
+                    </div>
+                    <div class="p-holder">
+                        <label for="p2-name"></label>
+                        <input type="text" id="p2-name" required>
+                        <span>
+                            Player 2
+                        </span>
+                    </div>
+                </div>
+                <button id="p-btn"><p>Create Player!</p></button>
+        </form>
+
+        <div class="player-holder game-main game-hide">
             <div class="player-info">
-                <h3 class="player-name">Shark</h3>
+                <h3 class="player-name" id="p1-display"></h3>
                 <div class="score-holder">
                     <p class="player-score">0</p>
                 </div>
             </div>
             <div class="player-info">
-                <h3 class="player-name">Tiger</h3>
+                <h3 class="player-name" id="p2-display"></h3>
                 <div class="score-holder">
                     <p class="player-score">0</p>
                 </div>
             </div>
         </div>
-        <div class="ttt-holder">
+        <div class="ttt-holder game-main game-hide">
             <div class="TTT">
                 <div class="holder">
                     <h4 class="tholder"></h4>
@@ -58,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <div class="nextgame">
+        <div class="nextgame game-main game-hide">
             <div class="winner-readout">
                 <h3 class="winner-name"></h3>
                 <button id="win-btn">
