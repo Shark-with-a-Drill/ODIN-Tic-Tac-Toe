@@ -76,6 +76,10 @@
   justify-content: space-evenly;
   gap: 5vw;
 }
+.textbox {
+  width: 10rem;
+}
+
 .player-holder {
   display: flex;
   align-items: center;
