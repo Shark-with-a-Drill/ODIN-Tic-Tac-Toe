@@ -99,18 +99,20 @@ function domLogic() {
         }
     }
     function createWinMessage(player) {
-        if (player.winCheck() == 'Win!') {
-            const winMessage = `${player.name} wins!`;
-            const playerKey = player.id;
-            if (gameBoard.getScoreUpdated() == 0) {
-                player.addScore();
-                gameBoard.scoreArray[playerKey] = player.getScore();
-                gameBoard.updateScoreUpdated(1);
-            }
-            const playerScore = gameBoard.scoreArray;
-            return [winMessage, playerScore];
+        if (player.winCheck() !== 'Win!') {
+            return null;
         }
-        return null;
+
+        const winMessage = `${player.name} wins!`;
+        const playerKey = player.id;
+        if (gameBoard.getScoreUpdated() == 0) {
+            player.addScore();
+            gameBoard.scoreArray[playerKey] = player.getScore();
+            gameBoard.updateScoreUpdated(1);
+        }
+        
+        const playerScore = gameBoard.scoreArray;
+        return [winMessage, playerScore];
     }
     function updateWinner() {
         let winnerMessage = createWinMessage(playerArray[0]);
