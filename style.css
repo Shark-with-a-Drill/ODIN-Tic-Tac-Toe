@@ -49,6 +49,65 @@
     scroll-behavior: smooth;
   }
 
+input {
+  display: block;
+  border-radius: 4px;
+  padding: 6px 6px 6px 10px;
+  background-color: #e7eaed;
+  border: 0;
+  border-bottom: 1px solid #00000070;   
+}
+span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  text-transform: uppercase;
+  transition: all .4s;
+  color: #828490;
+}
+input:valid ~ span{
+    font-size: 10px;
+    transform: translateX(4px) translateY(-7px);
+    font-size: 0.80em;
+    padding: 0 6px;
+    background-color: #27ae7f;
+    color: white;
+    border-radius: 2px;
+}
+input:valid {
+  border: 1.5px solid #27ae7f;  
+}
+input:invalid {
+  border: 1.5px solid #b43d22;
+}
+input:invalid:not(:placeholder-shown) ~ span {
+  font-size: 10px;
+  transform: translateX(4px) translateY(-7px);
+  font-size: 0.80em;
+  padding: 0 6px;
+  background-color: #b43d22;
+  color: white;
+  border-radius: 2px;
+}
+input:focus {
+  border: 2px solid #cdbb1b;  
+  outline: none;
+}
+button {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+  background-color: rgb(157, 130, 78);
+  border-radius: 4px;
+  border-color: wheat;
+  border-width: 0px;
+  color: white;
+  padding: 4px 0 4px 0;
+  cursor: pointer;
+  transition: all .4s;
+}
 .main {
   display: grid;
   grid-template: 1fr .85fr 1.75fr .75fr / 1fr;
@@ -88,6 +147,7 @@
 .p-holder {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .player-info {
   display: flex;
@@ -162,13 +222,15 @@
 }
 
 #win-btn {
-  height: 50px;
-  width: 100px;
-  border-radius: 25px;
+  height: 35px;
+  width: 115px;
+  border-radius: 4px;
+  padding: 2.5px 5px 2.5px 5px;
 }
 
 #win-btn > p {
-  color: black;
+  color: white;
+  text-transform: uppercase;
 }
 
 footer {
@@ -192,4 +254,16 @@ footer {
 }
 .game-display {
 
+}
+#p-btn {
+  text-transform: uppercase;
+  border-radius: 4px;
+  border-width: 0;
+  padding: 2.5px 5px 2.5px 5px
+}
+.valid-button {
+  background-color: #27ae7f;
+}
+.invalid-button {
+  background-color: #b43d22;
 }

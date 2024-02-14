@@ -1,3 +1,25 @@
+const playerNameArray = [...document.querySelectorAll('.player-name')];
+const gameElements = [...document.querySelectorAll('.game-main')];
+const formElement = document.querySelector('#form');
+const winInfoBox = document.querySelector('.winner-name')
+const holderArray = [...document.querySelectorAll('.holder')];
+const boxArray = [...document.querySelectorAll('.tholder')];
+const updateButton = document.getElementById('update');
+const playerScoreDisplayArray = [...document.querySelectorAll('.player-score')];
+const nextGameButton = document.querySelector('#win-btn');
+const startGameButton = document.querySelector('#p-btn');
+const inputs = [...document.querySelectorAll('input')];
+const winningCombinations = [
+    [0, 1, 2],  // Top Row
+    [3, 4, 5],  // Middle Row
+    [6, 7, 8],  // Bottom Row
+    [0, 3, 6],  // Left Column
+    [1, 4, 7],  // Middle Column
+    [2, 5, 8],  // Right Column
+    [0, 4, 8],  // Diagonal Top-Left to Bottom-Right
+    [2, 4, 6]   // Diagonal Top-Right to Bottom-Left
+];
+
 let playerArray = [];
 
 function setBoard() {
@@ -40,7 +62,7 @@ const gameBoard = setBoard();
 
 function managePlayer(player, xo) {
     const name = player;
-    const id = 'p' + playerArray.length;
+    const id = `p${playerArray.length}`;
     let score = 0;
     const getScore = () => score;
     const addScore = () => score++;
@@ -55,7 +77,8 @@ function gameLogic() {
     }
     //this function returns true if all values in combinationArray are within playerArray
     function isWinner(playerScoreArray) {
-        if ((gameBoard.getTurn() >= 9) && !(winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray))))
+        if ((gameBoard.getTurn() >= 9) && !(winningCombinations.some(combinationArray => 
+            checkArray(playerScoreArray, combinationArray))))
             return 'Tie!'; //checks for max turns and if no winning combo is detected
         else if (winningCombinations.some(combinationArray => checkArray(playerScoreArray, combinationArray))) {
             return 'Win!';
@@ -65,17 +88,6 @@ function gameLogic() {
 }
 
 const oper8r = gameLogic();
-
-const winningCombinations = [
-    [0, 1, 2],  // Top Row
-    [3, 4, 5],  // Middle Row
-    [6, 7, 8],  // Bottom Row
-    [0, 3, 6],  // Left Column
-    [1, 4, 7],  // Middle Column
-    [2, 5, 8],  // Right Column
-    [0, 4, 8],  // Diagonal Top-Left to Bottom-Right
-    [2, 4, 6]   // Diagonal Top-Right to Bottom-Left
-];
 
 function domLogic() {
     function markSymbol(gridNum) {
@@ -109,7 +121,8 @@ function domLogic() {
             winInfoBox.innerText = winnerMessage[0];
             const scores = winnerMessage[1];
             const scoreHolder = [scores.p0, scores.p1]
-            playerScoreDisplayArray.forEach((element, index) => element.innerText = scoreHolder[index]);
+            playerScoreDisplayArray.forEach((element, index) => 
+            element.innerText = scoreHolder[index]);
             return; //exits early if wins, if win on 9, shows win but if tie on 9, doesn't exit and tie overwrites the box
             }
             if (gameBoard.getTurn() > 8) {
@@ -156,25 +169,26 @@ function domLogic() {
             element.classList.add('game-display');
         })
     }
-    return {markSymbol, populateArray, updateWinner, resetGame, createPlayer, updatePlayerName, showGameArea}
+    function checkInputValidity() {
+        const allValid = inputs.every((input) => input.checkValidity());
+        if (allValid) {
+            startGameButton.classList.remove('invalid-button');
+            startGameButton.classList.add('valid-button');
+        }
+        else {
+            startGameButton.classList.remove('valid-button');
+            startGameButton.classList.add('invalid-button');
+        }
+        return allValid;
+    }
+    return {markSymbol, populateArray, updateWinner, resetGame, createPlayer, updatePlayerName, showGameArea, checkInputValidity}
 }
+
 const manipul8r = domLogic();
 
-
-const playerNameArray = [...document.querySelectorAll('.player-name')];
-const gameElements = [...document.querySelectorAll('.game-main')];
-const formElement = document.querySelector('#form');
-
-const winInfoBox = document.querySelector('.winner-name')
-const holderArray = [...document.querySelectorAll('.holder')];
-const boxArray = [...document.querySelectorAll('.tholder')];
-const updateButton = document.getElementById('update');
-
-const playerScoreDisplayArray = [...document.querySelectorAll('.player-score')];
-
-const nextGameButton = document.querySelector('#win-btn');
-const startGameButton = document.querySelector('#p-btn');
-
+inputs.forEach((input) => {
+    input.addEventListener('input', manipul8r.checkInputValidity)
+})
 
 //?change commas to semicolons in future possibly
 holderArray.forEach((box, index) => {
@@ -193,7 +207,9 @@ nextGameButton.addEventListener('click', (event) => {
 
 startGameButton.addEventListener('click', (event) => {
     event.preventDefault();
-    manipul8r.createPlayer();
-    manipul8r.updatePlayerName();
-    manipul8r.showGameArea();
+    if (manipul8r.checkInputValidity()) {
+        manipul8r.createPlayer();
+        manipul8r.updatePlayerName();
+        manipul8r.showGameArea();
+    }
 })
