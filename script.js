@@ -9,6 +9,7 @@ const playerScoreDisplayArray = [...document.querySelectorAll('.player-score')];
 const nextGameButton = document.querySelector('#win-btn');
 const startGameButton = document.querySelector('#p-btn');
 const inputs = [...document.querySelectorAll('input')];
+const invalidInputBoxes = [...document.querySelectorAll('.invalid-input-box')];
 const winningCombinations = [
     [0, 1, 2],  // Top Row
     [3, 4, 5],  // Middle Row
@@ -55,7 +56,8 @@ function setBoard() {
         scoreUpdated = value;
     }
 
-    return {board, scoreUpdated, scoreArray, markBoard, checkBoard, getTurn, resetBoard, getScoreUpdated, updateScoreUpdated};
+    return {board, scoreUpdated, scoreArray, markBoard, checkBoard, getTurn, 
+        resetBoard, getScoreUpdated, updateScoreUpdated};
 }
 
 const gameBoard = setBoard();
@@ -173,23 +175,44 @@ function domLogic() {
     }
     function checkInputValidity() {
         const allValid = inputs.every((input) => input.checkValidity());
-        if (allValid) {
-            startGameButton.classList.remove('invalid-button');
-            startGameButton.classList.add('valid-button');
-        }
-        else {
-            startGameButton.classList.remove('valid-button');
-            startGameButton.classList.add('invalid-button');
-        }
         return allValid;
     }
-    return {markSymbol, populateArray, updateWinner, resetGame, createPlayer, updatePlayerName, showGameArea, checkInputValidity}
+    function changeStartGreen() {
+        startGameButton.classList.remove('invalid-button');
+        startGameButton.classList.add('valid-button');
+    }
+    function changeStartRed() {
+        startGameButton.classList.remove('valid-button');
+        startGameButton.classList.add('invalid-button');
+    }
+    function showInputBoxInvalid(input) {
+        invalidInputBoxes[input].innerText = 'A - Z / a - z only';
+    }
+    function hideInputBoxInvalid(input) {
+        invalidInputBoxes[input].innerText = '';
+    }
+    return {markSymbol, populateArray, updateWinner, resetGame, createPlayer, 
+        updatePlayerName, showGameArea, checkInputValidity, changeStartGreen, 
+        changeStartRed, showInputBoxInvalid,hideInputBoxInvalid}
 }
 
 const manipul8r = domLogic();
 
-inputs.forEach((input) => {
-    input.addEventListener('input', manipul8r.checkInputValidity)
+inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+        if (input.checkValidity() || input.value == '') {
+            manipul8r.hideInputBoxInvalid(index);
+        }
+        else if (!input.checkValidity() && input.value != '') {
+            manipul8r.showInputBoxInvalid(index)
+        }
+        if (manipul8r.checkInputValidity()) {
+            manipul8r.changeStartGreen();
+        }
+        else if(!manipul8r.checkInputValidity()) {
+            manipul8r.changeStartRed();
+        }
+    })
 })
 
 //?change commas to semicolons in future possibly
@@ -199,7 +222,7 @@ holderArray.forEach((box, index) => {
         manipul8r.populateArray();
         manipul8r.updateWinner();
     });
-});
+})
 
 nextGameButton.addEventListener('click', (event) => {
     event.preventDefault();
